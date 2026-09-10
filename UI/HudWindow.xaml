@@ -1,0 +1,33 @@
+<Window x:Class="ClipBridge.UI.HudWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="ClipBridge HUD" WindowStyle="None" ResizeMode="NoResize" Topmost="True" ShowInTaskbar="False"
+        AllowsTransparency="True" Background="Transparent" ShowActivated="False" Focusable="False"
+        SizeToContent="WidthAndHeight" WindowStartupLocation="Manual" FontFamily="Segoe UI" Foreground="#EEEEEE">
+  <Border Background="#F0202226" CornerRadius="10" BorderBrush="#3A3D44" BorderThickness="1" Padding="10,8">
+    <StackPanel>
+      <ItemsControl x:Name="Cells">
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate><StackPanel Orientation="Horizontal"/></ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+          <DataTemplate>
+            <Border Width="150" Margin="3,0" Padding="6" CornerRadius="6" Background="#2A2D33">
+              <StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                  <Border Width="22" Height="22" CornerRadius="11" Background="{Binding SlotBrush}">
+                    <TextBlock Text="{Binding Slot}" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" FontSize="12" Foreground="White"/>
+                  </Border>
+                  <TextBlock Text="{Binding Kind}" Foreground="#8C9099" FontSize="10" Margin="6,0,0,0" VerticalAlignment="Center"/>
+                </StackPanel>
+                <Image Source="{Binding Thumb}" MaxHeight="48" HorizontalAlignment="Left" Stretch="Uniform" StretchDirection="DownOnly" Visibility="{Binding ThumbVis}"/>
+                <TextBlock Text="{Binding Text}" FontSize="11" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" MaxHeight="46" Visibility="{Binding TextVis}"/>
+              </StackPanel>
+            </Border>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+      <TextBlock x:Name="Foot" Text="Ctrl+Alt+number pastes  ·  +Shift pastes plain text" Foreground="#777" FontSize="10" Margin="4,6,0,0"/>
+    </StackPanel>
+  </Border>
+</Window>

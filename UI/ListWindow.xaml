@@ -1,0 +1,139 @@
+<Window x:Class="ClipBridge.UI.ListWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="ClipBridge" Width="470" Height="640" MinWidth="360" MinHeight="320"
+        WindowStyle="None" ResizeMode="CanResizeWithGrip" Topmost="True" ShowInTaskbar="False"
+        AllowsTransparency="True" Background="Transparent" WindowStartupLocation="Manual"
+        FontFamily="Segoe UI" FontSize="13" Foreground="#EEEEEE"
+        Deactivated="OnDeactivated" PreviewKeyDown="OnPreviewKeyDown">
+  <Window.Resources>
+    <BooleanToVisibilityConverter x:Key="B2V"/>
+    <Style x:Key="Flat" TargetType="Button">
+      <Setter Property="Background" Value="#2A2D33"/>
+      <Setter Property="Foreground" Value="#DDDDDD"/>
+      <Setter Property="BorderThickness" Value="0"/>
+      <Setter Property="Padding" Value="8,3"/>
+      <Setter Property="Margin" Value="3,0,0,0"/>
+      <Setter Property="Cursor" Value="Hand"/>
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="Button">
+            <Border x:Name="B" Background="{TemplateBinding Background}" CornerRadius="5" Padding="{TemplateBinding Padding}">
+              <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+            <ControlTemplate.Triggers>
+              <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="B" Property="Background" Value="#3C4048"/></Trigger>
+            </ControlTemplate.Triggers>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+    <Style x:Key="Tiny" TargetType="Button" BasedOn="{StaticResource Flat}">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="Padding" Value="4,1"/>
+      <Setter Property="FontSize" Value="14"/>
+    </Style>
+    <Style TargetType="ListBoxItem">
+      <Setter Property="Padding" Value="0"/>
+      <Setter Property="Margin" Value="0,1"/>
+      <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="ListBoxItem">
+            <Border x:Name="Bd" Background="Transparent" CornerRadius="6">
+              <ContentPresenter/>
+            </Border>
+            <ControlTemplate.Triggers>
+              <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Bd" Property="Background" Value="#2C2F36"/></Trigger>
+              <Trigger Property="IsSelected" Value="True"><Setter TargetName="Bd" Property="Background" Value="#34456A"/></Trigger>
+            </ControlTemplate.Triggers>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+    <Style TargetType="ContextMenu">
+      <Setter Property="Background" Value="#2A2D33"/>
+      <Setter Property="Foreground" Value="#EEEEEE"/>
+      <Setter Property="BorderBrush" Value="#444"/>
+    </Style>
+  </Window.Resources>
+
+  <Border Background="#F4202226" CornerRadius="10" BorderBrush="#3A3D44" BorderThickness="1" MouseLeftButtonDown="OnDragMove">
+    <Grid Margin="12" Background="Transparent">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="*"/>
+        <RowDefinition Height="Auto"/>
+      </Grid.RowDefinitions>
+
+      <DockPanel Grid.Row="0" Margin="0,0,0,8" Background="Transparent" Cursor="SizeAll" ToolTip="Drag to move the window. It reopens where you leave it.">
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+          <Button x:Name="TypeBtn" Content="Type: off" Click="OnTypeToggle" Style="{StaticResource Flat}" ToolTip="Ctrl+Alt+T: type text as keystrokes instead of pasting"/>
+          <Button x:Name="QueueBtn" Content="Queue: off" Click="OnQueueToggle" Style="{StaticResource Flat}" ToolTip="Ctrl+Alt+Q: collect copies, Ctrl+Alt+P pastes them in order"/>
+          <Button Content="Unpin all" Click="OnUnpinAll" Style="{StaticResource Flat}"/>
+          <Button Content="&#x2699;" Click="OnSettings" Style="{StaticResource Flat}" ToolTip="Settings"/>
+          <Button Content="&#x2715;" Click="OnClose" Style="{StaticResource Flat}"/>
+        </StackPanel>
+        <TextBlock Text="ClipBridge" FontWeight="Bold" FontSize="15" VerticalAlignment="Center"/>
+        <Ellipse x:Name="SyncDot" Width="9" Height="9" Fill="#777" Margin="10,1,5,0" VerticalAlignment="Center"/>
+        <TextBlock x:Name="SyncText" Text="" Foreground="#9AA0A8" VerticalAlignment="Center" FontSize="12" TextTrimming="CharacterEllipsis"/>
+      </DockPanel>
+
+      <TextBox Grid.Row="1" x:Name="SearchBox" TextChanged="OnSearch" Background="#2A2D33" Foreground="#EEEEEE"
+               BorderBrush="#444" BorderThickness="1" Padding="8,5" CaretBrush="#EEEEEE" FontSize="13" Margin="0,0,0,8"/>
+
+      <ListBox Grid.Row="2" x:Name="List" Background="Transparent" BorderThickness="0"
+               ScrollViewer.HorizontalScrollBarVisibility="Disabled" MouseDoubleClick="OnDoubleClick"
+               VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.ScrollUnit="Pixel">
+        <ListBox.ItemTemplate>
+          <DataTemplate>
+            <Border Padding="6" Background="Transparent">
+              <Border.ContextMenu>
+                <ContextMenu>
+                  <MenuItem Header="Paste" Click="Ctx_Paste"/>
+                  <MenuItem Header="Paste as plain text" Click="Ctx_Plain"/>
+                  <MenuItem Header="Type it out (keystrokes)" Click="Ctx_Type"/>
+                  <Separator/>
+                  <MenuItem Header="Paste UPPERCASE" Click="Ctx_Upper"/>
+                  <MenuItem Header="Paste lowercase" Click="Ctx_Lower"/>
+                  <MenuItem Header="Paste trimmed" Click="Ctx_Trim"/>
+                  <MenuItem Header="Paste with clean URLs (no tracking junk)" Click="Ctx_CleanUrl"/>
+                  <Separator/>
+                  <MenuItem Header="Copy to clipboard only" Click="Ctx_Copy"/>
+                  <MenuItem Header="Save image as..." Click="Ctx_SaveImage"/>
+                  <MenuItem Header="Pin / Unpin" Click="Ctx_Pin"/>
+                  <MenuItem Header="Delete" Click="Ctx_Delete"/>
+                </ContextMenu>
+              </Border.ContextMenu>
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="34"/>
+                  <ColumnDefinition Width="*"/>
+                  <ColumnDefinition Width="30"/>
+                  <ColumnDefinition Width="30"/>
+                </Grid.ColumnDefinitions>
+                <Border Grid.Column="0" Width="26" Height="26" CornerRadius="13" Background="{Binding SlotBrush}" VerticalAlignment="Top">
+                  <TextBlock Text="{Binding Slot}" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="White"/>
+                </Border>
+                <StackPanel Grid.Column="1" Margin="8,0,4,0">
+                  <Image Source="{Binding Thumb}" MaxHeight="150" HorizontalAlignment="Left" Stretch="Uniform" StretchDirection="DownOnly"
+                         Visibility="{Binding HasImage, Converter={StaticResource B2V}}" Margin="0,0,0,3"/>
+                  <TextBlock Text="{Binding PreviewText}" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" MaxHeight="58"
+                             Visibility="{Binding HasText, Converter={StaticResource B2V}}" Foreground="{Binding TextBrush}"/>
+                  <TextBlock Text="{Binding Meta}" Foreground="#8C9099" FontSize="11" Margin="0,3,0,0"/>
+                </StackPanel>
+                <Button Grid.Column="2" Content="{Binding PinGlyph}" Foreground="{Binding PinBrush}" Click="OnPinClick" ToolTip="Pin / unpin (Ctrl+P)" Style="{StaticResource Tiny}" VerticalAlignment="Top"/>
+                <Button Grid.Column="3" Content="&#x2715;" Click="OnDeleteClick" ToolTip="Delete (Del)" Style="{StaticResource Tiny}" VerticalAlignment="Top" Foreground="#999"/>
+              </Grid>
+            </Border>
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+      </ListBox>
+
+      <TextBlock Grid.Row="3" x:Name="Hint" Foreground="#777" FontSize="11" Margin="0,6,0,0" TextWrapping="Wrap"
+                 Cursor="SizeAll"
+                 Text="Enter paste  ·  Shift+Enter plain text  ·  Ctrl+Enter type it out  ·  Ctrl+P pin  ·  Del delete  ·  Esc close  ·  drag the title bar or this footer to move"/>
+    </Grid>
+  </Border>
+</Window>

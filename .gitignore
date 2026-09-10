@@ -1,0 +1,9 @@
+bin/
+obj/
+dist/
+testdata/
+shot/
+*.user
+*.suo
+.vs/
+*.log
