@@ -23,7 +23,7 @@ jobs:
         run: dotnet publish -c Release
 
       - name: Publish framework-dependent exe (small, needs .NET 8 Desktop Runtime)
-        run: dotnet publish -c Release --self-contained false -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o out-fd
+        run: dotnet publish -c Release --self-contained false -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:EnableCompressionInSingleFile=false -o out-fd
 
       - name: Assemble packages
         shell: pwsh
