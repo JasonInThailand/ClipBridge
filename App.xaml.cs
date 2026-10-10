@@ -345,6 +345,16 @@ public partial class App : System.Windows.Application
 
     public static void ApplyStartWithWindows(bool enable)
     {
+        if (Packaging.IsPackaged)
+        {
+            // Store builds start with Windows through the manifest's StartupTask; the Run key would be virtualized.
+            _ = Task.Run(async () =>
+            {
+                try { await Packaging.ApplyStartupTaskAsync(enable); }
+                catch (Exception ex) { Log.Write("startup task: " + ex.Message); }
+            });
+            return;
+        }
         try
         {
             using var key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run", true);
@@ -363,7 +373,8 @@ public partial class App : System.Windows.Application
             var app = (App)Current;
             app.OnExit(app, null!);
             app._mutex?.ReleaseMutex();
-            Process.Start(new ProcessStartInfo(exe) { UseShellExecute = true });
+            if (Packaging.IsPackaged) Process.Start("explorer.exe", Packaging.AppsFolderTarget);
+            else Process.Start(new ProcessStartInfo(exe) { UseShellExecute = true });
         }
         Current.Shutdown();
     }

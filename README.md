@@ -39,6 +39,14 @@ unpins, Del deletes, Esc closes, and typing filters the list.
 
 ## Install
 
+**Microsoft Store (recommended).** Install ClipBridge from the Microsoft Store. Store builds are signed by
+Microsoft, so they run with Smart App Control on, start with Windows automatically, and add their own firewall
+rules for sync. Do not run the Store version and the exe version on the same PC at the same time; uninstall the
+exe version first (delete `%LocalAppData%\Programs\ClipBridge` and its Start Menu shortcut). The Store version
+copies your existing settings, sync key, and history on first launch.
+
+**Exe from GitHub.**
+
 1. Download `ClipBridge-win-x64.zip` from the [Releases](../../releases) page and unzip it.
    (The `framework-dependent` zip is much smaller but needs the
    [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0) installed first.)
@@ -51,6 +59,8 @@ unpins, Del deletes, Esc closes, and typing filters the list.
 The exe is not code-signed, so Windows SmartScreen may show "Windows protected your PC" the first time.
 Click **More info → Run anyway**, or build it yourself from source.
 
+Full privacy policy: [PRIVACY.md](PRIVACY.md).
+
 ## Sync details
 
 - Each machine listens on TCP 47821 and announces itself by UDP broadcast on 47820. Machines with the same
@@ -62,7 +72,7 @@ Click **More info → Run anyway**, or build it yourself from source.
 
 ## Privacy
 
-History is stored unencrypted in `%LocalAppData%\ClipBridge\clipbridge.db` on each machine, like most
+History is stored unencrypted in `clipbridge.db` in the data folder on each machine (tray menu → Open data folder), like most
 clipboard managers. Anything you copy, including passwords, is kept until you delete it or it ages out of
 the 100-item history. Use "Pause capturing" in the tray menu when you do not want something recorded, and
 "Clear unpinned history" to wipe. Nothing leaves your LAN; there is no cloud component.

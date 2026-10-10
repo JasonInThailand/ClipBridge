@@ -40,6 +40,12 @@ public sealed class Settings
             if (args[i].Equals("--data", StringComparison.OrdinalIgnoreCase)) { IsCustomDir = true; return Path.GetFullPath(args[i + 1]); }
         var env = Environment.GetEnvironmentVariable("CLIPBRIDGE_DATA");
         if (!string.IsNullOrWhiteSpace(env)) { IsCustomDir = true; return Path.GetFullPath(env); }
+        if (Packaging.IsPackaged)
+        {
+            var pkgDir = Packaging.PackagedDataDir;
+            Packaging.MigrateFromExeInstall(pkgDir);
+            return pkgDir;
+        }
         return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "ClipBridge");
     }
     public static string FilePath => Path.Combine(Dir, "settings.json");
