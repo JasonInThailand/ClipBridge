@@ -14,7 +14,7 @@
   <Identity Name="{{IDENTITY_NAME}}" Publisher="{{PUBLISHER}}" Version="{{VERSION}}" ProcessorArchitecture="x64" />
 
   <Properties>
-    <DisplayName>ClipBridge</DisplayName>
+    <DisplayName>ClipBridgePro</DisplayName>
     <PublisherDisplayName>{{PUBLISHER_DISPLAY_NAME}}</PublisherDisplayName>
     <Logo>Images\StoreLogo.png</Logo>
     <Description>Clipboard manager with paste-by-number hotkeys, pins, OCR search, and encrypted two-PC LAN sync.</Description>
@@ -31,7 +31,7 @@
   <Applications>
     <Application Id="App" Executable="ClipBridge.exe" EntryPoint="Windows.FullTrustApplication">
       <uap:VisualElements
-        DisplayName="ClipBridge"
+        DisplayName="ClipBridgePro"
         Description="Clipboard manager with paste-by-number hotkeys and two-PC sync"
         BackgroundColor="transparent"
         Square150x150Logo="Images\Square150x150Logo.png"

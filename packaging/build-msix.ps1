@@ -4,16 +4,16 @@
 
   Identity comes from environment variables (set as GitHub repo variables in CI):
     STORE_IDENTITY_NAME, STORE_PUBLISHER, STORE_PUBLISHER_DISPLAY_NAME
-  Without them it uses placeholder dev values, which build fine but cannot be uploaded.
+  Without them it uses the Partner Center identity for ClipBridgePro (Store ID 9NFP2B3V0RTH).
 #>
 param([string]$Version = "1.0.0.0")
 $ErrorActionPreference = "Stop"
 $root = Split-Path $PSScriptRoot -Parent
 Set-Location $root
 
-$name = if ($env:STORE_IDENTITY_NAME) { $env:STORE_IDENTITY_NAME } else { "ClipBridge.Dev" }
-$pub  = if ($env:STORE_PUBLISHER) { $env:STORE_PUBLISHER } else { "CN=ClipBridgeDev" }
-$pubDisplay = if ($env:STORE_PUBLISHER_DISPLAY_NAME) { $env:STORE_PUBLISHER_DISPLAY_NAME } else { "ClipBridge Dev" }
+$name = if ($env:STORE_IDENTITY_NAME) { $env:STORE_IDENTITY_NAME } else { "ClipBridge.ClipBridgePro" }
+$pub  = if ($env:STORE_PUBLISHER) { $env:STORE_PUBLISHER } else { "CN=BEDBD01C-E72A-47D9-9006-B7B6AC07182D" }
+$pubDisplay = if ($env:STORE_PUBLISHER_DISPLAY_NAME) { $env:STORE_PUBLISHER_DISPLAY_NAME } else { "ClipBridge" }
 
 $layout = Join-Path $root "dist\msix-layout"
 if (Test-Path $layout) { Remove-Item $layout -Recurse -Force }

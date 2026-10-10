@@ -60,4 +60,5 @@ jobs:
           files: |
             ClipBridge-win-x64.zip
             ClipBridge-win-x64-framework-dependent.zip
+            ClipBridge-store.msix
           generate_release_notes: true
